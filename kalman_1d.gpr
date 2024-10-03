@@ -1,0 +1,29 @@
+with "config/kalman_1d_config.gpr";
+project Kalman_1d is
+
+   for Library_Name use "Kalman_1d";
+   for Library_Version use Project'Library_Name & ".so." & Kalman_1d_Config.Crate_Version;
+
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Kalman_1d_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "lib";
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("KALMAN_1D_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Kalman_1d_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Kalman_1d;
